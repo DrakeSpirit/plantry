@@ -1,9 +1,8 @@
 package me.drakespirit.plantry;
 
-import me.drakespirit.plantry.model.Ingredient;
+import me.drakespirit.plantry.ui.PantryScreen;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Main {
 
@@ -12,14 +11,8 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300,600);
 
-        JList<Ingredient> ingredients = new JList<>();
-        JPanel sidePanel = new JPanel();
-        JButton button = new JButton("Add item");
-        JLabel title = new JLabel("Pantry");
-        frame.getContentPane().add(title, BorderLayout.BEFORE_FIRST_LINE);
-        frame.getContentPane().add(ingredients);
-        frame.getContentPane().add(sidePanel, BorderLayout.LINE_END);
-        sidePanel.add(button);
+        PantryScreen pantryScreen = new PantryScreen();
+        frame.getContentPane().add(pantryScreen.get());
         frame.setVisible(true);
     }
 
