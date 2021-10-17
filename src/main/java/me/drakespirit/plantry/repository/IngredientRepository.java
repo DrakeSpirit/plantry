@@ -2,6 +2,7 @@ package me.drakespirit.plantry.repository;
 
 import me.drakespirit.plantry.model.Ingredient;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,4 +21,9 @@ public class IngredientRepository {
     public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
     }
+
+    public void removeIngredients(Collection<Ingredient> ingredients) {
+        ingredients.forEach(this.ingredients::remove);
+    }
+
 }

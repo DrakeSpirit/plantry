@@ -7,4 +7,8 @@ public record Ingredient(String name) implements Comparable<Ingredient> {
         return name.compareTo(o.name);
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }
