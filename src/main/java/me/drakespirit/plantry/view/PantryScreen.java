@@ -14,7 +14,10 @@ import static java.util.stream.Collectors.toList;
 public class PantryScreen implements ActionListener {
 
     private final JPanel mainPanel;
-    private final DefaultListModel<Ingredient> ingredientListModel;
+    private final JList<Ingredient> ingredientsList;
+    private final JButton addItemButton;
+    private final JButton removeItemButton;
+
     private final IngredientService ingredientService;
 
     public PantryScreen(IngredientService ingredientService) {
@@ -24,14 +27,18 @@ public class PantryScreen implements ActionListener {
         JLabel title = new JLabel("Pantry");
         mainPanel.add(title, BorderLayout.PAGE_START);
 
-        ingredientListModel = new DefaultListModel<>();
-        JList<Ingredient> ingredients = new JList<>(ingredientListModel);
-        mainPanel.add(ingredients, BorderLayout.CENTER);
+        DefaultListModel<Ingredient> ingredientListModel = new DefaultListModel<>();
+        ingredientsList = new JList<>(ingredientListModel);
+        mainPanel.add(ingredientsList, BorderLayout.CENTER);
 
-        JButton addItemButton = new JButton("Add item");
+        addItemButton = new JButton("Add item");
         addItemButton.addActionListener(this);
-        JPanel sidePanel = new JPanel(new BorderLayout());
-        sidePanel.add(addItemButton, BorderLayout.PAGE_START);
+        removeItemButton = new JButton("Remove item");
+        removeItemButton.addActionListener(this);
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
+        sidePanel.add(addItemButton);
+        sidePanel.add(removeItemButton);
         mainPanel.add(sidePanel, BorderLayout.LINE_END);
     }
 
@@ -43,12 +50,22 @@ public class PantryScreen implements ActionListener {
         List<Ingredient> ingredients = ingredientService.getAllIngredients().stream()
                 .sorted()
                 .collect(toList());
-        ingredientListModel.clear();
-        ingredientListModel.addAll(ingredients);
+        DefaultListModel<Ingredient> ingredientsListModel = (DefaultListModel<Ingredient>) ingredientsList.getModel();
+        ingredientsListModel.clear();
+        ingredientsListModel.addAll(ingredients);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == addItemButton) {
+            onClickAddItemButton();
+        }
+        else if(e.getSource() == removeItemButton) {
+            onClickRemoveItemButton();
+        }
+    }
+
+    private void onClickAddItemButton() {
         String ingredientName = (String) JOptionPane.showInputDialog(
                 mainPanel,
                 "Ingredient name:",
@@ -63,6 +80,12 @@ public class PantryScreen implements ActionListener {
             ingredientService.addIngredient(ingredient);
             updateIngredientList();
         }
+    }
+
+    private void onClickRemoveItemButton() {
+        List<Ingredient> selectedIngredients = ingredientsList.getSelectedValuesList();
+        ingredientService.removeIngredients(selectedIngredients);
+        updateIngredientList();
     }
 
 }
